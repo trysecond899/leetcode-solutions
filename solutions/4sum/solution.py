@@ -1,51 +1,28 @@
 class Solution:
     def fourSum(self, nums: List[int], target: int) -> List[List[int]]:
-        ans = []
-        n = len(nums)
-
-        # Sort to use two pointers and skip duplicates
         nums.sort()
-
-        for i in range(n):
-            # Skip duplicate first elements
-            if i > 0 and nums[i] == nums[i - 1]:
-                continue
-
-            for j in range(i + 1, n):
-                # Skip duplicate second elements
-                if j > i + 1 and nums[j] == nums[j - 1]:
-                    continue
-
-                k = j + 1
-                l = n - 1
-
-                # Find the remaining two elements using two pointers
-                while k < l:
-                    total = nums[i] + nums[j] + nums[k] + nums[l]
-
-                    if total == target:
-                        # Found a valid quadruplet
-                        ans.append([
-                            nums[i], nums[j], nums[k], nums[l]
-                        ])
-
-                        k += 1
-                        l -= 1
-
-                        # Skip duplicate third elements
-                        while k < l and nums[k] == nums[k - 1]:
-                            k += 1
-
-                        # Skip duplicate fourth elements
-                        while k < l and nums[l] == nums[l + 1]:
-                            l -= 1
-
-                    elif total < target:
-                        # Need a larger sum
-                        k += 1
-
+        n = len(nums)
+        ans = []
+        i = 0
+        while i < n:
+            j = i + 1
+            while j < n:
+                l, r = j + 1, n - 1
+                goal = target - nums[i] - nums[j]
+                while l < r:
+                    if nums[l] + nums[r] == goal:
+                        ans.append([nums[i], nums[j], nums[l], nums[r]])
+                        while l+1 < n and nums[l+1] == nums[l]: l += 1 # Skip duplicate nums[l]
+                        l += 1
+                        r -= 1
+                    elif nums[l] + nums[r] > goal:
+                        r -= 1
                     else:
-                        # Need a smaller sum
-                        l -= 1
-
+                        l += 1
+                
+                while j+1 < n and nums[j+1] == nums[j]: j += 1 # Skip duplicate nums[j]
+                j += 1
+                        
+            while i+1 < n and nums[i+1] == nums[i]: i += 1 # Skip duplicate nums[i]
+            i += 1
         return ans
