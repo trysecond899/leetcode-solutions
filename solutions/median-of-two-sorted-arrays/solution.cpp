@@ -1,39 +1,35 @@
 class Solution {
 public:
     double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
-        int n1 = nums1.size();
-        int n2 = nums2.size();
-        
-        // If nums1 is larger than nums2, swap them to ensure n1 is smaller than n2.
-        if (n1 > n2) {
+        if (nums1.size() > nums2.size()) {
             return findMedianSortedArrays(nums2, nums1);
         }
-        
-        int l = 0;
-        int r = n1;
-        while (l <= r) {
-            int mid1 = (l + r) / 2;
-            int mid2 = (n1 + n2 + 1) / 2 - mid1;
-            
-            int maxLeft1 = (mid1 == 0) ? INT_MIN : nums1[mid1-1];
-            int minRight1 = (mid1 == n1) ? INT_MAX : nums1[mid1];
-            
-            int maxLeft2 = (mid2 == 0) ? INT_MIN : nums2[mid2-1];
-            int minRight2 = (mid2 == n2) ? INT_MAX : nums2[mid2];
-            
+
+        int len1 = nums1.size(), len2 = nums2.size();
+        int left = 0, right = len1;
+
+        while (left <= right) {
+            int part1 = (left + right) / 2;
+            int part2 = (len1 + len2 + 1) / 2 - part1;
+
+            int maxLeft1 = (part1 == 0) ? INT_MIN : nums1[part1 - 1];
+            int minRight1 = (part1 == len1) ? INT_MAX : nums1[part1];
+            int maxLeft2 = (part2 == 0) ? INT_MIN : nums2[part2 - 1];
+            int minRight2 = (part2 == len2) ? INT_MAX : nums2[part2];
+
             if (maxLeft1 <= minRight2 && maxLeft2 <= minRight1) {
-                if ((n1 + n2) % 2 == 0) {
-                    return (double)(max(maxLeft1, maxLeft2) + min(minRight1, minRight2)) / 2;
+                if ((len1 + len2) % 2 == 0) {
+                    return (max(maxLeft1, maxLeft2) + min(minRight1, minRight2)) / 2.0;
                 } else {
-                    return (double)max(maxLeft1, maxLeft2);
+                    return max(maxLeft1, maxLeft2);
                 }
             } else if (maxLeft1 > minRight2) {
-                r = mid1 - 1;
+                right = part1 - 1;
             } else {
-                l = mid1 + 1;
+                left = part1 + 1;
             }
         }
-        
-        return -1;
+
+        return 0.0;        
     }
 };
